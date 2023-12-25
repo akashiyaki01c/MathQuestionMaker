@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2次式 展開</title>
+</head>
+<body>
+	<div id="question"></div>
+	<input type="text" id="input">
+	<button id="button">回答</button>
+	<div id="answer"></div>
+	<button id="next">次</button>
+
+	<script>
+		class QAndA {
+			constructor(q, a) {
+				this.q = q;
+				this.a = a;
+			}
+		}
+
+		let f = [
+			(a, b) => new QAndA(`(${a}x+${b})^2`, `${Math.pow(a, 2)}x^2+${2*a*b}x+${Math.pow(b, 2)}`),
+			(a, b) => new QAndA(`(${a}x-${b})^2`, `${Math.pow(a, 2)}x^2-${2*a*b}x+${Math.pow(b, 2)}`),
+			(a, b) => new QAndA(`(${a}x+${b})(${a}x-${b})`, `${Math.pow(a, 2)}x^2-${Math.pow(b, 2)}`),
+			
+		]
+		let getQandA = () => {
+			const maxValue = 10;
+			const minValue = 2;
+			const a = minValue + Math.floor(Math.random() * (maxValue - minValue));
+			const b = minValue + Math.floor(Math.random() * (maxValue - minValue));
+
+			return f[Math.floor(Math.random()*f.length)](...[a, b].sort());
+		};
+
+		let nowQandA = getQandA();
+		
+		document.querySelector("#next").onclick = () => {
+			nowQandA = getQandA();
+
+			document.querySelector("#question").innerHTML = nowQandA.q;
+			document.querySelector("#answer").innerHTML = "";
+			document.querySelector("#input").value = "";
+		}
+
+		document.querySelector("#button").onclick= () => {
+			if (nowQandA.a == document.querySelector("#input").value) {
+				document.querySelector("#answer").innerHTML = `正解！ ${nowQandA.a}`;
+			} else {
+				document.querySelector("#answer").innerHTML = `たぶん不正解 ${nowQandA.a}`;
+			}
+		}
+		
+	</script>
+</body>
+</html>
